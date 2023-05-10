@@ -1,0 +1,283 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "title": "YourPet Application 1.0.0",
+      "description": "Application for pets and their owners.\n\nThis is a YourPet Application Server based on the OpenAPI 3.0 specification\n\nSome useful links:\n- [The YourPet repository](https://github.com/leprecoin112/yourpet_backend)",
+      "contact": {
+        "name": "API developers",
+        "email": "estasjuk@gmail.com"
+      },
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "https://yourpet-backend-jxa0.onrender.com/api",
+        "description": "Production Server"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Authorization",
+        "description": "User Authorization endpoints",
+        "externalDocs": {
+          "description": "Find out more user operations",
+          "url": "http://swagger.io"
+        }
+      },
+      {
+        "name": "Notices",
+        "description": "Notices endpoints",
+        "externalDocs": {
+          "description": "Find out more about notices",
+          "url": "http://swagger.io"
+        }
+      },
+      {
+        "name": "Pets",
+        "description": "Pets endpoints",
+        "externalDocs": {
+          "description": "Find out more our pets",
+          "url": "http://swagger.io"
+        }
+      }
+    ],
+    "paths": {
+      "/auth/register": {
+        "post": {
+          "summary": "Add new user",
+          "tags": [
+            "Authorization"
+          ],
+          "description": "Add new user to the Database",
+          "operationId": "signupUser",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/auth/login": {
+        "post": {
+          "summary": "Login user",
+          "tags": [
+            "Authorization"
+          ],
+          "description": "Logs user into the system",
+          "operationId": "signinUser",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/auth/logout": {
+        "post": {
+          "summary": "User logout",
+          "tags": [
+            "Authorization"
+          ],
+          "description": "Logs out current logged in user session",
+          "operationId": "logoutUser",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "responses": {
+            "204": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/pet": {
+        "post": {
+          "tags": [
+            "Pets"
+          ],
+          "summary": "Add a new pet",
+          "description": "Add a new pet to the user account",
+          "operationId": "addPet",
+          "requestBody": {
+            "description": "Create a new pet in the store",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Pet"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Pet"
+                  }
+                },
+                "application/xml": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Pet"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "User": {
+          "type": "object",
+          "required": [
+            "email",
+            "password"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Backend-generated unique identifier",
+              "example": "RT_ghfh4hfkj678687hfjkn2"
+            },
+            "email": {
+              "type": "string",
+              "description": "user email",
+              "example": "estasjuk@gmail.com"
+            },
+            "password": {
+              "type": "string",
+              "description": "user password",
+              "example": "Ghj__567mlk"
+            }
+          }
+        },
+        "Pet": {
+          "type": "object",
+          "required": [
+            "name",
+            "date_of_birth",
+            "breed"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Backend-generated unique identifier",
+              "example": "RT_ghfh4hfkj678687hfjkn2"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of pet",
+              "example": "Bimbo"
+            },
+            "photo": {
+              "type": "string",
+              "description": "pet's image url (created if 'file' field was provided while adding new pet)"
+            },
+            "date_of_birth": {
+              "type": "string",
+              "description": "the date of birth of your pet",
+              "example": "2023-03-23T00:00:00.000Z"
+            },
+            "breed": {
+              "type": "string",
+              "description": "the pet breed",
+              "example": "bulldog"
+            },
+            "owner": {
+              "type": "string",
+              "description": "Backend-generated unique user identifier",
+              "example": "hfh4hffGHjjkj678687hfjkn"
+            }
+          }
+        }
+      }
+    }
+  }

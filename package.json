@@ -21,7 +21,8 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.4",
     "morgan": "1.10.0",
-    "nanoid": "3.3.6"
+    "nanoid": "3.3.6",
+    "swagger-ui-express": "^4.6.3"
   },
   "devDependencies": {
     "eslint": "7.19.0",
