@@ -49,13 +49,13 @@
             "Authorization"
           ],
           "description": "Add new user to the Database",
-          "operationId": "signupUser",
+          "operationId": "register",
           "requestBody": {
             "required": true,
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/RegistrationRequest"
                 }
               }
             }
@@ -66,7 +66,50 @@
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/User"
+                    "$ref": "#/components/schemas/RegistrationResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "409": {
+              "description": "Email already in use"
+            }
+          }
+        }
+      },
+      "/auth/login": {
+        "post": {
+          "summary": "Login user",
+          "tags": [
+            "Authorization"
+          ],
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "description": "Logs user into the system",
+          "operationId": "login",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginRequest"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/LoginResponse"
                   }
                 }
               }
@@ -83,20 +126,28 @@
           }
         }
       },
-      "/auth/login": {
-        "post": {
-          "summary": "Login user",
+      "/auth/avatar": {
+        "patch": {
+          "summary": "Add user photo",
           "tags": [
             "Authorization"
           ],
-          "description": "Logs user into the system",
-          "operationId": "signinUser",
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "description": "Add user photo to the filestorage",
+          "operationId": "updateAvatar",
           "requestBody": {
             "required": true,
             "content": {
-              "application/json": {
+              "multipart/form-data": {
                 "schema": {
-                  "$ref": "#/components/schemas/User"
+                  "$ref": "#/components/schemas/RegistrationRequest"
+                },
+                "example": {
+                  "avatar": null
                 }
               }
             }
@@ -107,7 +158,53 @@
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/User"
+                    "$ref": "#/components/schemas/RegistrationResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/auth/update-user": {
+        "put": {
+          "summary": "Update user information",
+          "tags": [
+            "Authorization"
+          ],
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "description": "add or update additional user data to the database",
+          "operationId": "updateUser",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserRequest"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UpdateUserResponse"
                   }
                 }
               }
@@ -130,31 +227,19 @@
           "tags": [
             "Authorization"
           ],
-          "description": "Logs out current logged in user session",
-          "operationId": "logoutUser",
-          "requestBody": {
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/User"
-                }
-              }
+          "security": [
+            {
+              "Bearer": []
             }
-          },
+          ],
+          "description": "Logs out current logged in user session",
+          "operationId": "logout",
           "responses": {
             "204": {
-              "description": "Successful operation",
-              "content": {
-                "application/json": {
-                  "schema": {
-                    "$ref": "#/components/schemas/User"
-                  }
-                }
-              }
+              "description": "Successful operation"
             },
             "400": {
-              "description": "Bad request"
+              "description": "No token provided"
             },
             "401": {
               "description": "Not authorized"
@@ -215,22 +300,18 @@
     },
     "components": {
       "schemas": {
-        "User": {
+        "RegistrationRequest": {
           "type": "object",
           "required": [
             "email",
             "password"
           ],
           "properties": {
-            "id": {
-              "type": "string",
-              "description": "Backend-generated unique identifier",
-              "example": "RT_ghfh4hfkj678687hfjkn2"
-            },
             "email": {
               "type": "string",
               "description": "user email",
-              "example": "estasjuk@gmail.com"
+              "example": "user@gmail.com",
+              "pattern": "/^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[A-Za-z\\d]{6,16}$/"
             },
             "password": {
               "type": "string",
@@ -239,29 +320,129 @@
             }
           }
         },
-        "Pet": {
+        "RegistrationResponse": {
           "type": "object",
-          "required": [
-            "name",
-            "date_of_birth",
-            "breed"
-          ],
           "properties": {
             "id": {
               "type": "string",
               "description": "Backend-generated unique identifier",
-              "example": "RT_ghfh4hfkj678687hfjkn2"
+              "example": "GGHJlhkj668__hjkhjkhh$%"
+            },
+            "email": {
+              "type": "string",
+              "description": "user email",
+              "example": "estasjuk@gmail.com"
+            }
+          }
+        },
+        "LoginRequest": {
+          "type": "object",
+          "required": [
+            "email",
+            "password"
+          ],
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "user email",
+              "example": "user@gmail.com",
+              "pattern": "/^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[A-Za-z\\d]{6,16}$/"
+            },
+            "password": {
+              "type": "string",
+              "description": "user password",
+              "example": "Ghj__567mlk"
+            }
+          }
+        },
+        "LoginResponse": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Backend-generated unique identifier",
+              "example": "GGHJlhkj668__hjkhjkhh$%"
+            },
+            "email": {
+              "type": "string",
+              "description": "user email",
+              "example": "estasjuk@gmail.com"
+            },
+            "token": {
+              "type": "string",
+              "description": "Backend-generated unique identifier",
+              "example": "GHR45GciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.jjF34QI6IjY0NWRlMTIzNTVlNWM4MDM0ODQ0Y2Q0MCIsImlhdCI6MTY4Mzg3NzgyNywiZXhwIjoxNjgzOTQyNjI3fQ.Cl7kfx9Tm-125ffgMKQGOzR9WhTH_dYET1B75hFjZyk"
+            }
+          }
+        },
+        "UpdateUserRequest": {
+          "type": "object",
+          "required": [
+            "email",
+            "password"
+          ],
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "username",
+              "example": "Olena"
+            },
+            "birthday": {
+              "type": "string",
+              "description": "user's date of birth",
+              "example": "2000-05-21T00:00:00.000Z"
+            },
+            "phone": {
+              "type": "string",
+              "description": "user's phone number",
+              "example": 380501112233
+            },
+            "city": {
+              "type": "string",
+              "description": "user's location",
+              "example": "Kyiv"
+            }
+          }
+        },
+        "Pet": {
+          "type": "object",
+          "required": [
+            "category",
+            "name",
+            "birthday",
+            "breed",
+            "location",
+            "avatarURL"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Backend-generated unique identifier"
+            },
+            "category": {
+              "type": "string",
+              "description": "pet's category",
+              "enum": [
+                "my pet",
+                "sell",
+                "lost-found",
+                "for-free"
+              ]
             },
             "name": {
               "type": "string",
               "description": "The name of pet",
               "example": "Bimbo"
             },
-            "photo": {
+            "avatarURL": {
               "type": "string",
-              "description": "pet's image url (created if 'file' field was provided while adding new pet)"
+              "description": "pet's image url"
             },
-            "date_of_birth": {
+            "title": {
+              "type": "string",
+              "description": "the title of user notice"
+            },
+            "birthday": {
               "type": "string",
               "description": "the date of birth of your pet",
               "example": "2023-03-23T00:00:00.000Z"
@@ -271,12 +452,41 @@
               "description": "the pet breed",
               "example": "bulldog"
             },
+            "sex": {
+              "type": "string",
+              "description": "the pet sex",
+              "enum": [
+                "male",
+                "female"
+              ],
+              "example": "male"
+            },
+            "location": {
+              "type": "string",
+              "description": "the pet location",
+              "example": "Kyiv"
+            },
+            "price": {
+              "type": "integer",
+              "description": "the pet price",
+              "example": 2500
+            },
+            "comments": {
+              "type": "string",
+              "description": "additional information about pet"
+            },
             "owner": {
               "type": "string",
-              "description": "Backend-generated unique user identifier",
-              "example": "hfh4hffGHjjkj678687hfjkn"
+              "description": "Backend-generated unique user identifier"
             }
           }
+        }
+      },
+      "securitySchemes": {
+        "Bearer": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
         }
       }
     }

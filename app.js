@@ -1,9 +1,11 @@
 const express = require("express");
 const logger = require("morgan");
 const cors = require("cors");
+require("dotenv").config();
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require("./swagger.json");
 
+const noticesRouter = require('./routes/api/noticesRoutes');
 
 const app = express();
 
@@ -17,6 +19,7 @@ app.use(express.json());
 app.get("/api", (req, res) => {
   res.status(200).json({ message: "You are welcome YourPet API" });
 });
+app.use("/api/notices", noticesRouter);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res) => {
