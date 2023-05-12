@@ -1,9 +1,10 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const gravatar = require("gravatar");
 const fs = require("fs/promises");
 const path = require("path");
 const { nanoid } = require("nanoid");
+
+const imagePath = path.join(__dirname, "image");
 
 const { ctrlWrapper } = require("../utils");
 
@@ -23,7 +24,7 @@ const register = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-  const avatarURL = gravatar.url(email);
+  const avatarURL = path.join(imagePath, "Photodefault.png");
   const verificationToken = nanoid();
 
   const result = await User.create({
