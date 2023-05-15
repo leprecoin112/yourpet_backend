@@ -25,6 +25,7 @@ const userSchema = new Schema({
     birthday: String,
     phone: String,
     city: String,
+    favorite: [{ type: Schema.Types.ObjectId, ref: "notice" }],
     token: {
         type: String,
         default: ""

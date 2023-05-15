@@ -1,6 +1,5 @@
 module.exports = class HttpError extends Error {
-  status;
-
+ 
   constructor(status, message) {
     super(message);
     this.status = status;
@@ -21,6 +20,7 @@ module.exports = class HttpError extends Error {
   static NotFoundError(message = "Not Found.") {
     return new HttpError(404, message);
   }
+  
   static ConflictError(message = "Conflict.") {
     return new HttpError(409, message);
   }

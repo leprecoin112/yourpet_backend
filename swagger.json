@@ -1,0 +1,672 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+      "title": "YourPet Application 1.0.0",
+      "description": "Application for pets and their owners.\n\nThis is a YourPet Application Server based on the OpenAPI 3.0 specification\n\nSome useful links:\n- [The YourPet repository](https://github.com/leprecoin112/yourpet_backend)",
+      "contact": {
+        "name": "API developers",
+        "email": "estasjuk@gmail.com"
+      },
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "https://yourpet-backend-jxa0.onrender.com/api",
+        "description": "Production Server"
+      }
+    ],
+    "tags": [
+      {
+        "name": "Authorization",
+        "description": "User Authorization endpoints",
+        "externalDocs": {
+          "description": "Find out more user operations",
+          "url": "http://swagger.io"
+        }
+      },
+      {
+        "name": "Notices",
+        "description": "Notices endpoints",
+        "externalDocs": {
+          "description": "Find out more about notices",
+          "url": "http://swagger.io"
+        }
+      },
+      {
+        "name": "Pets",
+        "description": "Pets endpoints",
+        "externalDocs": {
+          "description": "Find out more our pets",
+          "url": "http://swagger.io"
+        }
+      }
+    ],
+    "paths": {
+      "/auth/register": {
+        "post": {
+          "summary": "Add new user",
+          "tags": [
+            "Authorization"
+          ],
+          "description": "Add new user to the Database",
+          "operationId": "register",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationRequest"
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/RegistrationResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "409": {
+              "description": "Email already in use"
+            }
+          }
+        }
+      },
+      "/auth/login": {
+        "post": {
+          "summary": "Login user",
+          "tags": [
+            "Authorization"
+          ],
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "description": "Logs user into the system",
+          "operationId": "login",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginRequest"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/LoginResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/auth/avatar": {
+        "patch": {
+          "summary": "Add user photo",
+          "tags": [
+            "Authorization"
+          ],
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "description": "Add user photo to the filestorage",
+          "operationId": "updateAvatar",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateAvatarRequest"
+                },
+                "example": {
+                  "avatar": null
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UpdateAvatarResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/auth/update-user": {
+        "put": {
+          "summary": "Update user information",
+          "tags": [
+            "Authorization"
+          ],
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "description": "add or update additional user data to the database",
+          "operationId": "updateUser",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserRequest"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/UpdateUserResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/auth/logout": {
+        "post": {
+          "summary": "User logout",
+          "tags": [
+            "Authorization"
+          ],
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "description": "Logs out current logged in user session",
+          "operationId": "logout",
+          "responses": {
+            "204": {
+              "description": "Successful operation"
+            },
+            "400": {
+              "description": "No token provided"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/pets": {
+        "post": {
+          "tags": [
+            "Pets"
+          ],
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "summary": "Add a new pet",
+          "description": "Add a new pet to the user account",
+          "operationId": "addPet",
+          "requestBody": {
+            "description": "Create a new pet in the user account",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddPetRequest"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Successful operation",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AddPetResponse"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "User not found"
+            }
+          }
+        }
+      },
+      "/pets{petId}": {
+        "delete": {
+          "tags": [
+            "Pets"
+          ],
+          "security": [
+            {
+              "Bearer": []
+            }
+          ],
+          "summary": "Delete user's pet",
+          "description": "Delete a pet from the user account",
+          "operationId": "deletePet",
+          "parameters": [
+            {
+              "name": "petId",
+              "in": "path",
+              "description": "ID of pet that needs to be deleted",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "description": "Delete the pet with the specified ID"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Successful operation"
+            },
+            "400": {
+              "description": "Bad request"
+            },
+            "401": {
+              "description": "Not authorized"
+            },
+            "404": {
+              "description": "Pet not found"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "RegistrationRequest": {
+          "type": "object",
+          "required": [
+            "email",
+            "password"
+          ],
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "user email",
+              "example": "user@gmail.com",
+              "pattern": "/^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[A-Za-z\\d]{6,16}$/"
+            },
+            "password": {
+              "type": "string",
+              "description": "user password",
+              "example": "Ghj__567mlk"
+            }
+          }
+        },
+        "RegistrationResponse": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Backend-generated unique identifier",
+              "example": "GGHJlhkj668__hjkhjkhh$%"
+            },
+            "email": {
+              "type": "string",
+              "description": "user email",
+              "example": "estasjuk@gmail.com"
+            }
+          }
+        },
+        "LoginRequest": {
+          "type": "object",
+          "required": [
+            "email",
+            "password"
+          ],
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "user email",
+              "example": "user@gmail.com",
+              "pattern": "/^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)[A-Za-z\\d]{6,16}$/"
+            },
+            "password": {
+              "type": "string",
+              "description": "user password",
+              "example": "Ghj__567mlk"
+            }
+          }
+        },
+        "LoginResponse": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Backend-generated unique identifier",
+              "example": "GGHJlhkj668__hjkhjkhh$%"
+            },
+            "email": {
+              "type": "string",
+              "description": "user email",
+              "example": "estasjuk@gmail.com"
+            },
+            "token": {
+              "type": "string",
+              "description": "Backend-generated unique identifier",
+              "example": "GHR45GciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.jjF34QI6IjY0NWRlMTIzNTVlNWM4MDM0ODQ0Y2Q0MCIsImlhdCI6MTY4Mzg3NzgyNywiZXhwIjoxNjgzOTQyNjI3fQ.Cl7kfx9Tm-125ffgMKQGOzR9WhTH_dYET1B75hFjZyk"
+            }
+          }
+        },
+        "UpdateAvatarRequest": {
+          "type": "object",
+          "properties": {
+            "file": {
+              "type": "string",
+              "format": "binary",
+              "description": "User's avatar image"
+            }
+          }
+        },
+        "UpdateAvatarResponse": {
+          "type": "object",
+          "properties": {
+            "avatarURL": {
+              "type": "string",
+              "description": "User's avatar image URL"
+            }
+          }
+        },
+        "UpdateUserRequest": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "username",
+              "example": "Olena"
+            },
+            "birthday": {
+              "type": "string",
+              "description": "user's date of birth",
+              "example": "2000-05-21T00:00:00.000Z"
+            },
+            "phone": {
+              "type": "string",
+              "description": "user's phone number",
+              "example": 380501112233
+            },
+            "city": {
+              "type": "string",
+              "description": "user's location",
+              "example": "Kyiv"
+            }
+          }
+        },
+        "UpdateUserResponse": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Backend-generated unique identifier",
+              "example": "GGHJlhkj668__hjkhjkhh$%"
+            },
+            "name": {
+              "type": "string",
+              "description": "username",
+              "example": "Olena"
+            },
+            "birthday": {
+              "type": "string",
+              "description": "user's date of birth",
+              "example": "2000-05-21T00:00:00.000Z"
+            },
+            "phone": {
+              "type": "string",
+              "description": "user's phone number",
+              "example": 380501112233
+            },
+            "city": {
+              "type": "string",
+              "description": "user's location",
+              "example": "Kyiv"
+            }
+          }
+        },
+        "AddPetRequest": {
+          "type": "object",
+          "required": [
+            "category",
+            "name",
+            "birthday",
+            "breed"
+          ],
+          "properties": {
+            "category": {
+              "type": "string",
+              "description": "pet's category",
+              "enum": [
+                "my pet",
+                "sell",
+                "lost-found",
+                "for-free"
+              ],
+              "example": "my pet"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of pet",
+              "example": "Bimbo"
+            },
+            "avatarURL": {
+              "type": "string",
+              "description": "pet's image url",
+              "example": "https://images.pexels.com/photos/3687770/pexels-photo-3687770.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1/"
+            },
+            "birthday": {
+              "type": "string",
+              "description": "the date of birth of your pet",
+              "example": "2023-03-23T00:00:00.000Z"
+            },
+            "breed": {
+              "type": "string",
+              "description": "the pet breed",
+              "example": "bulldog"
+            },
+            "comments": {
+              "type": "string",
+              "description": "additional information about pet",
+              "example": "this is my favorite dog Bimbo"
+            }
+          }
+        },
+        "AddPetResponse": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Backend-generated unique identifier",
+              "example": "GGHJlhkj668__hjkhjkhh$%"
+            },
+            "category": {
+              "type": "string",
+              "description": "pet's category",
+              "enum": [
+                "my pet",
+                "sell",
+                "lost-found",
+                "for-free"
+              ],
+              "example": "my pet"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of pet",
+              "example": "Bimbo"
+            },
+            "avatarURL": {
+              "type": "string",
+              "description": "pet's image url",
+              "example": "https://images.pexels.com/photos/3687770/pexels-photo-3687770.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1/"
+            },
+            "birthday": {
+              "type": "string",
+              "description": "the date of birth of your pet",
+              "example": "2023-03-23T00:00:00.000Z"
+            },
+            "breed": {
+              "type": "string",
+              "description": "the pet breed",
+              "example": "bulldog"
+            },
+            "comments": {
+              "type": "string",
+              "description": "additional information about pet",
+              "example": "this is my favorite dog Bimbo"
+            }
+          }
+        },
+        "Pet": {
+          "type": "object",
+          "required": [
+            "category",
+            "name",
+            "birthday",
+            "breed",
+            "location",
+            "avatarURL"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Backend-generated unique identifier"
+            },
+            "category": {
+              "type": "string",
+              "description": "pet's category",
+              "enum": [
+                "my pet",
+                "sell",
+                "lost-found",
+                "for-free"
+              ]
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of pet",
+              "example": "Bimbo"
+            },
+            "avatarURL": {
+              "type": "string",
+              "description": "pet's image url"
+            },
+            "title": {
+              "type": "string",
+              "description": "the title of user notice"
+            },
+            "birthday": {
+              "type": "string",
+              "description": "the date of birth of your pet",
+              "example": "2023-03-23T00:00:00.000Z"
+            },
+            "breed": {
+              "type": "string",
+              "description": "the pet breed",
+              "example": "bulldog"
+            },
+            "sex": {
+              "type": "string",
+              "description": "the pet sex",
+              "enum": [
+                "male",
+                "female"
+              ],
+              "example": "male"
+            },
+            "location": {
+              "type": "string",
+              "description": "the pet location",
+              "example": "Kyiv"
+            },
+            "price": {
+              "type": "integer",
+              "description": "the pet price",
+              "example": 2500
+            },
+            "comments": {
+              "type": "string",
+              "description": "additional information about pet"
+            },
+            "owner": {
+              "type": "string",
+              "description": "Backend-generated unique user identifier"
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "Bearer": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
