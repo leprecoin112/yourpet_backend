@@ -5,6 +5,8 @@ require("dotenv").config();
 
 const authRouter = require("./routes/api/auth-routes");
 
+const userRouter = require('./routes/api/user-routes');
+
 const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
@@ -15,6 +17,7 @@ app.use(express.static("public"));
 app.use(express.json());
 
 app.use("/api/auth", authRouter);
+app.use('/api/user', userRouter);
 
 app.get("/api", (req, res) => {
   res.status(200).json({ message: "You are welcome YourPet API" });
