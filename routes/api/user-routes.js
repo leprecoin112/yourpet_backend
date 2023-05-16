@@ -5,8 +5,8 @@ const ctrl = require('../../controllers/user-controllers');
 
 const { authenticate } = require('../../middlewares');
 
-router.get('/', authenticate, ctrl.getUserInfo);
+// router.get('/', authenticate, ctrl.getUserInfo);
 
-router.get('/pets', authenticate, ctrl.getUserPets);
+// router.get('/pets', authenticate, ctrl.getUserPets);
 
 module.exports = router;
