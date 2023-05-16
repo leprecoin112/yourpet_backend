@@ -33,12 +33,24 @@
       "description": "User Authorization endpoints"
     },
     {
+      "name": "User",
+      "description": "User information endpoints"
+    },
+    {
       "name": "Notices",
       "description": "Notices endpoints"
     },
     {
       "name": "Pets",
       "description": "Pets endpoints"
+    },
+    {
+      "name": "News",
+      "description": "News endpoints"
+    },
+    {
+      "name": "Sponsors",
+      "description": "Sponsors endpoints"
     }
   ],
   "paths": {
@@ -121,11 +133,34 @@
         }
       }
     },
-    "/auth/avatars": {
+    "/auth/logout": {
+      "post": {
+        "summary": "User logout",
+        "tags": [
+          "Authorization"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "description": "Logs out current logged in user session",
+        "operationId": "logout",
+        "responses": {
+          "204": {
+            "description": "Logout success"
+          },
+          "401": {
+            "description": "Not authorized"
+          }
+        }
+      }
+    },
+    "/user/avatars": {
       "patch": {
         "summary": "Add user photo",
         "tags": [
-          "Authorization"
+          "User"
         ],
         "security": [
           {
@@ -167,11 +202,11 @@
         }
       }
     },
-    "/auth/update-user": {
+    "/user/update-user": {
       "put": {
         "summary": "Update user information",
         "tags": [
-          "Authorization"
+          "User"
         ],
         "security": [
           {
@@ -213,25 +248,37 @@
         }
       }
     },
-    "/auth/logout": {
-      "post": {
-        "summary": "User logout",
+    "/user/current": {
+      "get": {
+        "summary": "Get current user",
         "tags": [
-          "Authorization"
+          "User"
         ],
         "security": [
           {
             "Bearer": []
           }
         ],
-        "description": "Logs out current logged in user session",
-        "operationId": "logout",
+        "description": "Check if the current user is valid",
+        "operationId": "getCurrent",
         "responses": {
-          "204": {
-            "description": "Logout success"
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "description": "Return the current user email",
+                  "example": "estasjuk@gmail.com"
+                }
+              }
+            }
           },
-          "401": {
-            "description": "Not authorized"
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Notices not found"
           }
         }
       }
@@ -277,6 +324,38 @@
         ],
         "description": "Find the notices by title",
         "operationId": "getAllUserNotices",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "required": true,
+            "example": "dog",
+            "schema": {
+              "type": "string",
+              "description": "Keyword for search"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Page number for pagination",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Number of articles per page.",
+              "default": 6
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -312,12 +391,32 @@
             "required": true,
             "schema": {
               "type": "string",
-              "description": "Add the notice to specific category",
+              "description": "Category for search",
               "enum": [
                 "sell",
                 "lost-found",
                 "in-good-hands"
               ]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Page number for pagination",
+              "default": 1
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Number of articles per page.",
+              "default": 6
             }
           }
         ],
@@ -512,7 +611,7 @@
         }
       }
     },
-    "/notices/notice/{noticeId}": {
+    "/notices/{noticeId}": {
       "get": {
         "summary": "Find the notice by ID",
         "tags": [
@@ -546,9 +645,7 @@
             "description": "Bad request"
           }
         }
-      }
-    },
-    "/notices/{noticeId}": {
+      },
       "delete": {
         "tags": [
           "Notices"
@@ -676,6 +773,101 @@
           }
         }
       }
+    },
+    "/news": {
+      "get": {
+        "summary": "Get all news",
+        "tags": [
+          "News"
+        ],
+        "description": "Show all news",
+        "operationId": "getAllNews",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListOfNewsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "News not found"
+          }
+        }
+      }
+    },
+    "/news/search": {
+      "get": {
+        "summary": "Find news by title",
+        "tags": [
+          "News"
+        ],
+        "description": "Find the notices by title",
+        "operationId": "findNewsByTitle",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "pet"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListOfNewsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "News not found"
+          }
+        }
+      }
+    },
+    "/sponsors": {
+      "get": {
+        "summary": "Get all sponsors",
+        "tags": [
+          "Sponsors"
+        ],
+        "description": "Show all sponsors",
+        "operationId": "getAllSponsors",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListOfSponsorsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "News not found"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -707,6 +899,11 @@
             "type": "string",
             "description": "user email",
             "example": "estasjuk@gmail.com"
+          },
+          "token": {
+            "type": "string",
+            "description": "Backend-generated unique identifier",
+            "example": "GHR45GciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.jjF34QI6IjY0NWRlMTIzNTVlNWM4MDM0ODQ0Y2Q0MCIsImlhdCI6MTY4Mzg3NzgyNywiZXhwIjoxNjgzOTQyNjI3fQ.Cl7kfx9Tm-125ffgMKQGOzR9WhTH_dYET1B75hFjZyk"
           }
         }
       },
@@ -733,6 +930,16 @@
       "LoginResponse": {
         "type": "object",
         "properties": {
+          "name": {
+            "type": "string",
+            "description": "user name",
+            "example": "Olena"
+          },
+          "email": {
+            "type": "string",
+            "description": "user email",
+            "example": "estasjuk@gmail.com"
+          },
           "token": {
             "type": "string",
             "description": "Backend-generated unique identifier",
@@ -820,7 +1027,31 @@
           "result": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/AddNoticeResponse"
+              "type": "object",
+              "properties": {
+                "totalResults": {
+                  "type": "integer",
+                  "example": 8
+                },
+                "totalPages": {
+                  "type": "integer",
+                  "example": 2
+                },
+                "page": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "limit": {
+                  "type": "integer",
+                  "example": 6
+                },
+                "notices": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AddNoticeResponse"
+                  }
+                }
+              }
             },
             "description": "List of notices found by reques"
           }
@@ -941,11 +1172,6 @@
             "type": "integer",
             "description": "the pet price",
             "example": 2500
-          },
-          "favorite": {
-            "type": "boolean",
-            "description": "is the notice favorite or not",
-            "example": true
           },
           "comments": {
             "type": "string",
@@ -1068,6 +1294,140 @@
           "updatedAt": {
             "type": "string",
             "example": "2023-05-15T10:51:30.531Z"
+          }
+        }
+      },
+      "ListOfNewsResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "totalResults": {
+                  "type": "integer",
+                  "example": 1151
+                },
+                "totalPages": {
+                  "type": "integer",
+                  "example": 192
+                },
+                "page": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "limit": {
+                  "type": "integer",
+                  "example": 6
+                },
+                "news": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/New"
+                  }
+                }
+              }
+            },
+            "description": "List of notices found by request"
+          }
+        }
+      },
+      "ListOfSponsorsResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Sponsor"
+            },
+            "description": "List of notices found by reques"
+          }
+        }
+      },
+      "New": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "nyt://article/b957c262-3043-59ac-bed0-94c2cdd738a9"
+          },
+          "imgUrl": {
+            "type": "string",
+            "example": "https://www.nytimes.com/images/2022/02/22/multimedia/22evening-PROMO-01/22evening-russia-blog480.jpg"
+          },
+          "title": {
+            "type": "string",
+            "example": "Your Tuesday Evening Briefing"
+          },
+          "text": {
+            "type": "string",
+            "example": "Here’s what you need to know at the end of the day."
+          },
+          "date": {
+            "type": "string",
+            "example": "2022-02-22T22:37:31+0000"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://www.nytimes.com/2022/02/22/briefing/russia-ahmaud-arbery-womens-soccer.html"
+          }
+        }
+      },
+      "Sponsor": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "GGHJlhkj668__hjkhjkhh$%"
+          },
+          "title": {
+            "type": "string",
+            "example": "Притулок для бездомних тварин 'Сіріус'"
+          },
+          "url": {
+            "type": "string",
+            "example": "https://dogcat.com.ua"
+          },
+          "addressUrl": {
+            "type": "string",
+            "example": "https://goo.gl/maps/iq8NXEUf31EAQCzc6"
+          },
+          "imageUrl": {
+            "type": "string",
+            "example": "https://storage.googleapis.com/kidslikev2_bucket/pets-support/images/sponsors/frame_287.png"
+          },
+          "address": {
+            "type": "string",
+            "example": "Fedorivka, Kyiv Oblast, Ukraine, 07372"
+          },
+          "workDays": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "isOpen": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "from": {
+                  "type": "string",
+                  "example": "09:00"
+                },
+                "to": {
+                  "type": "string",
+                  "example": "17:00"
+                }
+              }
+            }
+          },
+          "phone": {
+            "type": "string",
+            "example": 380931934069
+          },
+          "email": {
+            "type": "string",
+            "example": "hello@happypaw.ua"
           }
         }
       }
