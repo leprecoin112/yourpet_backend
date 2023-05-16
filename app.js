@@ -5,9 +5,11 @@ require("dotenv").config();
 
 const authRouter = require("./routes/api/auth-routes");
 
-const userRouter = require('./routes/api/user-routes');
+// const userRouter = require('./routes/api/user-routes');
 
 const newsRouter = require('./routes/api/news-routes');
+
+const sponsorsRouter = require('./routes/api/sponsors-routes');
 
 const app = express();
 
@@ -21,7 +23,7 @@ app.use(express.json());
 app.use("/api/auth", authRouter);
 // app.use("/api/user", userRouter);
 app.use("/api/news", newsRouter);
-// app.use("/api/sponsors", sponsorsRouter);
+app.use("/api/sponsors", sponsorsRouter);
 
 app.get("/api", (req, res) => {
   res.status(200).json({ message: "You are welcome YourPet API" });

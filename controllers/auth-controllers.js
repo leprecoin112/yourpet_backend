@@ -71,7 +71,7 @@ const resendVerifyEmail = async (req, res) => {
     throw HttpError.NotFoundError("Email not found");
   }
   if (user.verify) {
-    throw HttpErrorBadRequest("Email already verify");
+    throw HttpError.BadRequest("Email already verify");
   }
 
   const verifyEmail = {

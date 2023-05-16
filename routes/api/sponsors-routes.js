@@ -1,10 +1,9 @@
 const express = require('express');
 
-const { ctrl } = require('../../controllers/news-controllers');
+const ctrl = require('../../controllers/sponsors-controllers');
 
 const router = express.Router();
 
-// router.get('/', ctrl.getAllNews);
-// router.get('/search', ctrl.findNewsByTitle);
+router.get('/', ctrl.getAllSponsors);
 
-// module.exports = router;
+module.exports = router;
