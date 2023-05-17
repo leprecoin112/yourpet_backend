@@ -7,6 +7,7 @@ const swaggerDocument = require("./swagger.json");
 
 const authRouter = require("./routes/api/auth-routes");
 const noticeRouter = require("./routes/api/notices-routes");
+const userRouter = require("./routes/api/user-routes");
 
 const app = express();
 
@@ -17,13 +18,10 @@ app.use(cors());
 app.use(express.static("public"));
 app.use(express.json());
 
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/auth", authRouter);
 app.use("/api/notices", noticeRouter);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-app.get("/api", (req, res) => {
-  res.status(200).json({ message: "You are welcome YourPet API" });
-});
+app.use("/api/user", userRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
