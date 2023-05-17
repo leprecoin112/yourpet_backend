@@ -21,6 +21,8 @@ const userSchema = new Schema({
         type: String, 
         require: true 
     },
+
+    favorite: [{ type: Schema.Types.ObjectId, ref: "notice" }],
     name: { 
         type: String,
         default: ""
@@ -41,14 +43,6 @@ const userSchema = new Schema({
         type: String,
         default: ""
     },
-    verify: {
-        type: Boolean,
-        default: false,
-      },
-      verificationToken: {
-        type: String,
-        required: [true, "Verify token is required"],
-      },
 }, { versionKey: false, timestamps: true });
 
 userSchema.post("save", handleMongooseError);
