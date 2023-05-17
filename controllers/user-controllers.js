@@ -1,8 +1,34 @@
+const fs = require("fs/promises");
+const path = require("path");
+
 const { ctrlWrapper } = require("../utils");
 
 const { User } = require("../models/user");
 
-const updateName = async (req, res) => {
+const avatarsDir = path.join(__dirname, "../", "public", "avatars");
+
+const getCurrent = async (req, res) => {
+  const{ email, name } = req.user;
+
+  res.json({
+     email,
+     name,
+    });
+};
+
+const updateAvatar = async (req, res) => {
+  const { _id } = req.user;
+  const { path: tempUpload, filename } = req.file;
+  const avatarName = `${_id}_${filename}`;
+  const resultUpload = path.join(avatarsDir, avatarName);
+  await fs.rename(tempUpload, resultUpload);
+  const avatarURL = path.join("avatars", avatarName);
+  await User.findByIdAndUpdate(_id, { avatarURL });
+
+  res.json({ avatarURL });
+};
+
+  const updateName = async (req, res) => {
     const { _id } = req.user;
     const { name } = req.body;
     await User.findByIdAndUpdate(_id, { name });
@@ -42,6 +68,8 @@ const updateName = async (req, res) => {
   };
   
   module.exports = {
+    getCurrent: ctrlWrapper(getCurrent),
+    updateAvatar: ctrlWrapper(updateAvatar),
     updateName: ctrlWrapper(updateName),
     updatePhone: ctrlWrapper(updatePhone),
     updateCity: ctrlWrapper(updateCity),

@@ -104,6 +104,10 @@ const getFavoriteUserNotices = async (req, res) => {
 
   const result = user.favorite;
 
+  if (result.length === 0) {
+    throw HttpError.NotFoundError(`There any notices for this user`);
+}
+
   res.status(200).json({
     result,
   });
@@ -127,6 +131,8 @@ const removeNoticeFromFavorite = async (req, res) => {
         if (!result) {
           throw HttpError.NotFoundError('Notice not found');
         }
+
+
 
         res.status(200).json({
             message: 'Notice removed',
@@ -159,6 +165,10 @@ const getAllUserNotices = async (req, res) => {
       "-createdAt -updatedAt",
       { skip, limit })
       .populate("owner", "email");
+
+      if (notices.length === 0) {
+        throw HttpError.NotFoundError(`There any notices for this user`);
+    }
 
     res.status(200).json({
         notices,

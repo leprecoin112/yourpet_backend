@@ -1,6 +1,5 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const fs = require("fs/promises");
 const path = require("path");
 
 const imagePath = path.join(__dirname, "image");
@@ -11,9 +10,7 @@ const { User } = require("../models/user");
 
 const { HttpError} = require("../helpers");
 
-const { SECRET_KEY, BASE_URL } = process.env;
-
-const avatarsDir = path.join(__dirname, "../", "public", "avatars");
+const { SECRET_KEY} = process.env;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -67,14 +64,6 @@ const login = async (req, res) => {
   });
 };
 
-const getCurrent = async (req, res) => {
-  const{ email, name } = req.user;
-
-  res.json({
-     email,
-     name,
-    });
-};
 
 const logout = async (req, res) => {
   const { _id } = req.user;
@@ -85,24 +74,9 @@ const logout = async (req, res) => {
   });
 };
 
-const updateAvatar = async (req, res) => {
-  const { _id } = req.user;
-  const { path: tempUpload, filename } = req.file;
-  const avatarName = `${_id}_${filename}`;
-  const resultUpload = path.join(avatarsDir, avatarName);
-  await fs.rename(tempUpload, resultUpload);
-  const avatarURL = path.join("avatars", avatarName);
-  await User.findByIdAndUpdate(_id, { avatarURL });
-
-  res.json({ avatarURL });
-};
-
 
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
-  getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
-  updateAvatar: ctrlWrapper(updateAvatar),
-
 };
