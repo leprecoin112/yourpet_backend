@@ -10,7 +10,7 @@ const { ctrlWrapper } = require("../utils");
 
 const { User } = require("../models/user");
 
-const { HttpError, sendEmail } = require("../helpers");
+const { HttpError} = require("../helpers");
 
 const { SECRET_KEY, BASE_URL } = process.env;
 
@@ -33,9 +33,16 @@ const register = async (req, res) => {
     avatarURL,
     verificationToken,
   });
+
+  const payload = {
+    id: result._id,
+  };
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
+  await User.findByIdAndUpdate(result._id, { token });
  
   res.status(201).json({
-      email: result.email,
+    token,
+    email: result.email,
   });
 };
 

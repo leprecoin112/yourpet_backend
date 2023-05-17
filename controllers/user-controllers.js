@@ -3,10 +3,6 @@ const { ctrlWrapper } = require("../utils");
 
 const { User } = require("../models/user");
 
-const { HttpError, sendEmail } = require("../helpers");
-
-const { SECRET_KEY, BASE_URL } = process.env;
-
 const updateName = async (req, res) => {
     const { _id } = req.user;
     const { name } = req.body;
