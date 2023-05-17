@@ -21,10 +21,22 @@ const userSchema = new Schema({
         type: String, 
         require: true 
     },
-    name: String,
-    birthday: String,
-    phone: String,
-    city: String,
+    name: { 
+        type: String,
+        default: ""
+    },
+    birthday:{ 
+        type: String,
+        default: ""
+    },
+    phone:{  
+        type: String,
+        default: ""
+    },
+    city: { 
+        type: String,
+        default: ""
+    },
     token: {
         type: String,
         default: ""
@@ -44,6 +56,7 @@ userSchema.post("save", handleMongooseError);
 const registerSchema = Joi.object({
     email: Joi.string().pattern(emailRegexp).required(),
     password: Joi.string().min(6).required(),
+   
 });
 
 const loginSchema = Joi.object({
@@ -56,10 +69,28 @@ const emailSchema = Joi.object({
    
 });
 
+const nameSchema = Joi.object({
+    name: Joi.string()
+});
+const phoneSchema = Joi.object({
+    phone: Joi.string()
+});
+const citySchema = Joi.object({
+   city: Joi.string()
+});
+
+const birthdaySchema = Joi.object({
+    birthday: Joi.string()
+ });
+
 const schemas = {
     registerSchema,
     loginSchema,
     emailSchema,
+    nameSchema,
+    phoneSchema,
+    citySchema,
+    birthdaySchema,
 };
 
 const User = model("user", userSchema);
