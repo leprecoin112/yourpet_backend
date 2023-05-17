@@ -2,7 +2,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const fs = require("fs/promises");
 const path = require("path");
-const { nanoid } = require("nanoid");
 
 const imagePath = path.join(__dirname, "image");
 
@@ -25,13 +24,11 @@ const register = async (req, res) => {
  
   const hashPassword = await bcrypt.hash(password, 10);
   const avatarURL = path.join(imagePath, "Photodefault.png");
-  const verificationToken = nanoid();
 
   const result = await User.create({
     ...req.body,
     password: hashPassword,
     avatarURL,
-    verificationToken,
   });
 
   const payload = {
