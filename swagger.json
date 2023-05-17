@@ -202,52 +202,6 @@
         }
       }
     },
-    "/user/update-user": {
-      "put": {
-        "summary": "Update user information",
-        "tags": [
-          "User"
-        ],
-        "security": [
-          {
-            "Bearer": []
-          }
-        ],
-        "description": "add or update additional user data to the database",
-        "operationId": "updateUser",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateUserRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UpdateUserResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "401": {
-            "description": "Not authorized"
-          },
-          "404": {
-            "description": "User not found"
-          }
-        }
-      }
-    },
     "/user/current": {
       "get": {
         "summary": "Get current user",
@@ -283,6 +237,190 @@
         }
       }
     },
+    "/user/name": {
+      "patch": {
+        "summary": "Update user name",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "description": "Update user name in the account",
+        "operationId": "updateName",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserNameRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserNameResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/user/phone": {
+      "patch": {
+        "summary": "Update user phone",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "description": "Update user phone in the account",
+        "operationId": "updatePhone",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserPhoneRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserPhoneResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/user/city": {
+      "patch": {
+        "summary": "Update user city",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "description": "Update user city in the account",
+        "operationId": "updateCity",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserCityRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserCityResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/user/birthday": {
+      "patch": {
+        "summary": "Update user birthday",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "description": "Update user birthday in the account",
+        "operationId": "updateBirthday",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserBirthdayRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserBirthdayResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Not authorized"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
     "/notices": {
       "get": {
         "summary": "Get user notices",
@@ -311,7 +449,7 @@
             "description": "Bad request"
           },
           "404": {
-            "description": "Notices not found"
+            "description": "There any notices for this user"
           }
         }
       }
@@ -371,7 +509,7 @@
             "description": "Bad request"
           },
           "404": {
-            "description": "Notice not found"
+            "description": "Notices not found"
           }
         }
       }
@@ -433,6 +571,9 @@
           },
           "400": {
             "description": "Bad request"
+          },
+          "404": {
+            "description": "There are any notices in category \"name-of-category\""
           },
           "409": {
             "description": "Email already in use"
@@ -733,7 +874,7 @@
         }
       }
     },
-    "/pets{petId}": {
+    "/pets/{petId}": {
       "delete": {
         "tags": [
           "Pets"
@@ -966,58 +1107,95 @@
           }
         }
       },
-      "UpdateUserRequest": {
+      "UpdateUserNameRequest": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "user name",
+            "example": "Iryna"
+          }
+        }
+      },
+      "UpdateUserNameResponse": {
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
-            "description": "username",
-            "example": "Olena"
-          },
-          "birthday": {
-            "type": "string",
-            "description": "user's date of birth",
-            "example": "2000-05-21T00:00:00.000Z"
-          },
+            "description": "user name",
+            "example": "Iryna"
+          }
+        }
+      },
+      "UpdateUserPhoneRequest": {
+        "type": "object",
+        "required": [
+          "phone"
+        ],
+        "properties": {
           "phone": {
             "type": "string",
-            "description": "user's phone number",
-            "example": 380501112233
-          },
+            "description": "user phone",
+            "example": 380961112233
+          }
+        }
+      },
+      "UpdateUserPhoneResponse": {
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string",
+            "description": "user phone",
+            "example": 380961112233
+          }
+        }
+      },
+      "UpdateUserCityRequest": {
+        "type": "object",
+        "required": [
+          "city"
+        ],
+        "properties": {
           "city": {
             "type": "string",
-            "description": "user's location",
+            "description": "user city",
             "example": "Kyiv"
           }
         }
       },
-      "UpdateUserResponse": {
+      "UpdateUserCityResponse": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "description": "Backend-generated unique identifier",
-            "example": "GGHJlhkj668__hjkhjkhh$%"
-          },
-          "name": {
-            "type": "string",
-            "description": "username",
-            "example": "Olena"
-          },
-          "birthday": {
-            "type": "string",
-            "description": "user's date of birth",
-            "example": "2000-05-21T00:00:00.000Z"
-          },
           "phone": {
             "type": "string",
-            "description": "user's phone number",
-            "example": 380501112233
-          },
-          "city": {
-            "type": "string",
-            "description": "user's location",
+            "description": "user city",
             "example": "Kyiv"
+          }
+        }
+      },
+      "UpdateUserBirthdayRequest": {
+        "type": "object",
+        "required": [
+          "birthday"
+        ],
+        "properties": {
+          "birthday": {
+            "type": "string",
+            "description": "user date of birth",
+            "example": "2000-05-23T00:00:00.000Z"
+          }
+        }
+      },
+      "UpdateUserBirthdayResponse": {
+        "type": "object",
+        "properties": {
+          "phone": {
+            "type": "string",
+            "description": "user date of birth",
+            "example": "2000-05-23T00:00:00.000Z"
           }
         }
       },

@@ -10,6 +10,14 @@ const { schemas } = require("../../models/user");
 
 const router = express.Router();
 
+// router.get("/", authenticate, ctrl.getUserInfo) // контролери Віки
+
+// router.get("/pets", authenticate, ctrl.getUserPets ) // // контролери Віки
+
+router.get("/current", authenticate, ctrl.getCurrent);
+
+router.patch("/avatars", authenticate, upload.single("avatar"), ctrl.updateAvatar);
+
 router.patch("/name", authenticate, validateBody(schemas.nameSchema), ctrl.updateName);
 
 router.patch("/phone", authenticate, validateBody(schemas.phoneSchema), ctrl.updatePhone);
