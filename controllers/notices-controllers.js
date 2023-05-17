@@ -12,10 +12,13 @@ const ctrlWrapper = require('../utils/ctrlWrapper');
 const photosDir = path.join(__dirname, "../", "public", "photos");
 
 const getNoticeByTitle = async (req, res) => {
-    const { title } = req.query;
+    const { page = 1, limit = 12, title } = req.query;
+    const skip = (page - 1) * limit;
     const normalizedFind = title.toLowerCase().trim();
     
-    const allNotices = await Notice.find();
+    const allNotices = await Notice.find({},
+      "-createdAt -updatedAt",
+      { skip, limit: Number(limit) });
     
     const result = allNotices.filter(notice => notice.title.toLowerCase().includes(normalizedFind));
 
@@ -23,7 +26,14 @@ const getNoticeByTitle = async (req, res) => {
       throw HttpError.NotFoundError("Notices not found");
     }
 
+    const totalResult = result.length;
+    const totalPages = Math.ceil(totalResult / limit);
+
     res.status(200).json({
+        totalResult,
+        totalPages,
+        page: +page,
+        limit: +limit,
         result,
     }); 
 };
@@ -42,7 +52,14 @@ const getNoticesByCategory = async (req, res) => {
         throw HttpError.NotFoundError(`There any notices in category ${category}`);
     }
 
+    const totalResult = result.length;
+    const totalPages = Math.ceil(totalResult / limit);
+
     res.status(200).json({
+        totalResult,
+        totalPages,
+        page: +page,
+        limit: +limit,
         result,
     }); 
 };
@@ -68,14 +85,13 @@ const addNoticeToFavorite = async (req, res) => {
             throw HttpError.NotFoundError("User not found");
         };
 
-        const user = await User.findByIdAndUpdate
+        const result = await User.findByIdAndUpdate
         (userId,  { $addToSet: { favorite: noticeId } }).populate('favorite');
         
-        if (!user) {
+        if (!result) {
             throw HttpError.NotFoundError(`Notice with ${noticeId} not found`);
         }
 
-        const result = user.favorite
         res.status(200).json({
           result,
         }); 

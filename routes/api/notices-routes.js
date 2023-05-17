@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.get('/search', ctrl.getNoticeByTitle);
 router.get('/categories/:category', ctrl.getNoticesByCategory);
-router.get('/notice/:noticeId', ctrl.getNoticeById);
+router.get('/:noticeId', ctrl.getNoticeById);
 
 router.post('/favorites/:noticeId', authenticate, ctrl.addNoticeToFavorite);
 router.get('/favorites', authenticate, ctrl.getFavoriteUserNotices);
