@@ -9,10 +9,9 @@ const { validateBody } = require("../../utils");
 const { schemas } = require("../../models/user");
 
 const router = express.Router();
+ router.get("/", authenticate, ctrl.getUserInfo)
 
-// router.get("/", authenticate, ctrl.getUserInfo) // контролери Віки
-
-// router.get("/pets", authenticate, ctrl.getUserPets ) // // контролери Віки
+ router.get("/pets", authenticate, ctrl.getUserPets )
 
 router.get("/current", authenticate, ctrl.getCurrent);
 
