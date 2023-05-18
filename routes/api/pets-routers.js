@@ -1,5 +1,5 @@
 const express = require("express");
-const ctrl = require("../../controllers/add-pet-controllers");
+const ctrl = require("../../controllers/pets-controllers");
 const router = express.Router();
 const { upload, authenticate, validationId } = require("../../middlewares");
 const { validateBody } = require("../../utils");
