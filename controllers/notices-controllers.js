@@ -11,57 +11,97 @@ const ctrlWrapper = require('../utils/ctrlWrapper');
 
 const photosDir = path.join(__dirname, "../", "public", "photos");
 
-const getNoticeByTitle = async (req, res) => {
-    const { page = 1, limit = 12, title } = req.query;
-    const skip = (page - 1) * limit;
-    const normalizedFind = title.toLowerCase().trim();
-    
-    const allNotices = await Notice.find({},
-      "-createdAt -updatedAt",
-      { skip, limit: Number(limit) });
-    
-    const result = allNotices.filter(notice => notice.title.toLowerCase().includes(normalizedFind));
+const getAllNotices = async (req, res) => {
+  const { page = 1, limit = 12 } = req.query;
+  const skip = (page - 1) * limit;
 
-    if(result.length === 0) {
-      throw HttpError.NotFoundError("Notices not found");
-    }
+  const result = await Notice.find({},
+    "-createdAt -updatedAt",
+    { skip, limit: Number(limit) });
 
-    const totalResult = result.length;
-    const totalPages = Math.ceil(totalResult / limit);
+  if (result.length === 0) {
+    throw HttpError.NotFoundError("Notices not found");
+  }
 
-    res.status(200).json({
-        totalResult,
-        totalPages,
-        page: +page,
-        limit: +limit,
-        result,
-    }); 
+  const totalResult = result.length;
+  const totalPages = Math.ceil(totalResult / limit);
+                
+  res.status(200).json({
+    totalResult,
+    totalPages,
+    page: +page,
+    limit: +limit,
+    result,
+  });
+              
+
 };
 
-const getNoticesByCategory = async (req, res) => {
-    const { category } = req.params;
-    const { page = 1, limit = 12 } = req.query;
-    const skip = (page - 1) * limit;
-    
-    const result = await Notice.find({category},
-        "-createdAt -updatedAt",
-        { skip, limit: Number(limit) }
-    ).sort({ createdAt: -1 });
 
+const getNoticesBySearchParams = async (req, res) => {
+  
+  const { page = 1, limit = 12, title, category} = req.query;
+  const skip = (page - 1) * limit;
+ 
+  let result = [];
+
+
+  if (!title && !category) {
+    result = await Notice.find({},
+      "-createdAt -updatedAt",
+      { skip, limit: Number(limit) });
+  
     if (result.length === 0) {
-        throw HttpError.NotFoundError(`There any notices in category ${category}`);
+      throw HttpError.NotFoundError("Notices not found");
     }
+  }
 
-    const totalResult = result.length;
-    const totalPages = Math.ceil(totalResult / limit);
+  if (!title && category) {
+    result = await Notice.find({category},
+      "-createdAt -updatedAt",
+      { skip, limit: Number(limit) });
+  
+    if (result.length === 0) {
+      throw HttpError.NotFoundError("Notices not found");
+    }
+  }
 
-    res.status(200).json({
-        totalResult,
-        totalPages,
-        page: +page,
-        limit: +limit,
-        result,
-    }); 
+  if (title && !category) {
+    const normalizedFind = title.toLowerCase().trim();
+    const notices = await Notice.find({},
+      "-createdAt -updatedAt",
+      { skip, limit: Number(limit) });
+
+    result = notices.filter(notice => notice.title.toLowerCase()
+      .includes(normalizedFind)
+    )
+  
+    if (result.length === 0) {
+      throw HttpError.NotFoundError("Notices not found");
+    }
+  }
+
+  if (category && title) {
+    const normalizedFind = title.toLowerCase().trim();
+    const notices = await Notice.find({category},
+      "-createdAt -updatedAt",
+      { skip, limit: Number(limit) }
+    )
+    result = notices.filter(notice => notice.title.toLowerCase()
+    .includes(normalizedFind))
+  };
+
+        
+  const totalResult = result.length;
+  const totalPages = Math.ceil(totalResult / limit);
+        
+  res.status(200).json({
+    totalResult,
+    totalPages,
+    page: +page,
+    limit: +limit,
+    result,
+  }); 
 };
 
 const getNoticeById = async (req, res) => {
@@ -191,9 +231,11 @@ const removeUserNotice = async (req, res) => {
     });
   };
 
-  module.exports = {
-    getNoticeByTitle: ctrlWrapper(getNoticeByTitle),
-    getNoticesByCategory: ctrlWrapper(getNoticesByCategory),
+module.exports = {
+    getAllNotices: ctrlWrapper(getAllNotices),
+    getNoticesBySearchParams: ctrlWrapper(getNoticesBySearchParams),
+    // getNoticeByTitle: ctrlWrapper(getNoticeByTitle),
+    // getNoticesByCategory: ctrlWrapper(getNoticesByCategory),
     getNoticeById: ctrlWrapper(getNoticeById),
     addNoticeToFavorite: ctrlWrapper(addNoticeToFavorite),
     getFavoriteUserNotices: ctrlWrapper(getFavoriteUserNotices),

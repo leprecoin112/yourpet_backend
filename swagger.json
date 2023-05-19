@@ -156,6 +156,39 @@
         }
       }
     },
+    "/user": {
+      "get": {
+        "summary": "Get info about user",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "description": "Find all information about authorized user",
+        "operationId": "getUserInfo",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
     "/user/avatars": {
       "patch": {
         "summary": "Add user photo",
@@ -421,6 +454,39 @@
         }
       }
     },
+    "/user/pets": {
+      "get": {
+        "summary": "Get user pets",
+        "tags": [
+          "User"
+        ],
+        "security": [
+          {
+            "Bearer": []
+          }
+        ],
+        "description": "Find the pets owned by user",
+        "operationId": "getUserPets",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListOfPetsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Notices not found"
+          }
+        }
+      }
+    },
     "/notices": {
       "get": {
         "summary": "Get user notices",
@@ -433,7 +499,35 @@
           }
         ],
         "description": "Find the notices owned by user",
-        "operationId": "getNoticeByTitle",
+        "operationId": "getAllUserNotices",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListOfNoticesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "There any notices for this user"
+          }
+        }
+      }
+    },
+    "/notices/all": {
+      "get": {
+        "summary": "Get all notices",
+        "tags": [
+          "Notices"
+        ],
+        "description": "Find all existing notices",
+        "operationId": "getAllNotices",
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -456,12 +550,12 @@
     },
     "/notices/search": {
       "get": {
-        "summary": "Search by title",
+        "summary": "Search by title and/or by category",
         "tags": [
           "Notices"
         ],
-        "description": "Find the notices by title",
-        "operationId": "getAllUserNotices",
+        "description": "Find the notices by title and/or by category",
+        "operationId": "getNoticesBySearchParams",
         "parameters": [
           {
             "name": "title",
@@ -471,6 +565,16 @@
             "schema": {
               "type": "string",
               "description": "Keyword for search"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": true,
+            "example": "sell",
+            "schema": {
+              "type": "string",
+              "description": "Category for search"
             }
           },
           {
@@ -510,73 +614,6 @@
           },
           "404": {
             "description": "Notices not found"
-          }
-        }
-      }
-    },
-    "/notices/categories/{category}": {
-      "get": {
-        "summary": "Search by category",
-        "tags": [
-          "Notices"
-        ],
-        "description": "Find notices od specific category",
-        "operationId": "getNoticesByCategory",
-        "parameters": [
-          {
-            "name": "category",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "description": "Category for search",
-              "enum": [
-                "sell",
-                "lost-found",
-                "in-good-hands"
-              ]
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "description": "Page number for pagination",
-              "default": 1
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "description": "Number of articles per page.",
-              "default": 6
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListOfNoticesResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "404": {
-            "description": "There are any notices in category \"name-of-category\""
-          },
-          "409": {
-            "description": "Email already in use"
           }
         }
       }
@@ -839,13 +876,13 @@
         ],
         "summary": "Add a new pet",
         "description": "Add a new pet to the user account",
-        "operationId": "addPet",
+        "operationId": "addPets",
         "requestBody": {
           "description": "Create a new pet in the user account",
           "content": {
-            "multipart/form-data:": {
+            "multipart/form-data": {
               "schema": {
-                "$ref": "#/components/schemas/AddPetRequest"
+                "$ref": "#/components/schemas/PetRequest"
               }
             }
           },
@@ -857,7 +894,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AddPetResponse"
+                  "$ref": "#/components/schemas/PetResponse"
                 }
               }
             }
@@ -886,7 +923,7 @@
         ],
         "summary": "Delete user's pet",
         "description": "Delete a pet from the user account",
-        "operationId": "removePet",
+        "operationId": "deletePet",
         "parameters": [
           {
             "name": "petId",
@@ -900,8 +937,15 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Successful operation"
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PetResponse"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad request"
@@ -1370,71 +1414,44 @@
           }
         }
       },
-      "AddPetRequest": {
+      "PetRequest": {
         "type": "object",
         "required": [
-          "category",
           "name",
           "birthday",
-          "breed"
+          "breed",
+          "avatar"
         ],
         "properties": {
-          "category": {
-            "type": "string",
-            "description": "pet's category",
-            "enum": [
-              "my pet",
-              "sell",
-              "lost-found",
-              "for-free"
-            ],
-            "example": "my pet"
-          },
           "name": {
             "type": "string",
-            "description": "The name of pet",
             "example": "Bimbo"
-          },
-          "photo": {
-            "type": "string",
-            "format": "binary",
-            "description": "Pet's photo"
           },
           "birthday": {
             "type": "string",
-            "description": "the date of birth of your pet",
-            "example": "2023-03-23T00:00:00.000Z"
+            "example": "23.03.2022"
           },
           "breed": {
             "type": "string",
-            "description": "the pet breed",
             "example": "bulldog"
           },
           "comments": {
             "type": "string",
-            "description": "additional information about pet",
             "example": "this is my favorite dog Bimbo"
+          },
+          "avatar": {
+            "type": "string",
+            "format": "binary"
           }
         }
       },
-      "AddPetResponse": {
+      "PetResponse": {
         "type": "object",
         "properties": {
           "_id": {
             "type": "string",
             "description": "Backend-generated unique identifier",
             "example": "GGHJlhkj668__hjkhjkhh$%"
-          },
-          "category": {
-            "type": "string",
-            "description": "pet's category",
-            "enum": [
-              "my pet",
-              "sell",
-              "lost-found",
-              "for-free"
-            ],
-            "example": "my pet"
           },
           "name": {
             "type": "string",
@@ -1472,6 +1489,18 @@
           "updatedAt": {
             "type": "string",
             "example": "2023-05-15T10:51:30.531Z"
+          }
+        }
+      },
+      "ListOfPetsResponse": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PetResponse"
+            },
+            "description": "List of pets belonged to user"
           }
         }
       },
@@ -1519,7 +1548,7 @@
             "items": {
               "$ref": "#/components/schemas/Sponsor"
             },
-            "description": "List of notices found by reques"
+            "description": "List of notices found by request"
           }
         }
       },
@@ -1606,6 +1635,39 @@
           "email": {
             "type": "string",
             "example": "hello@happypaw.ua"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "GGHJlhkj668__hjkhjkhh$%"
+          },
+          "email": {
+            "type": "string",
+            "example": "estasjuk@gmail.com"
+          },
+          "name": {
+            "type": "string",
+            "example": "Olena"
+          },
+          "avatarURL": {
+            "type": "string",
+            "example": "avatars\\\\avatar.jpg"
+          },
+          "birthday": {
+            "type": "string",
+            "example": "25.10.2000"
+          },
+          "phone": {
+            "type": "string",
+            "example": 380961112233
+          },
+          "city": {
+            "type": "string",
+            "example": "Kyiv"
           }
         }
       }

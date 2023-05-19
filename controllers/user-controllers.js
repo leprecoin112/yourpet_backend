@@ -5,7 +5,23 @@ const { ctrlWrapper } = require("../utils");
 
 const { User } = require("../models/user");
 
+const { Pet } = require("../models/pets");
+
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
+
+const getUserInfo = async (req, res) => {
+  const { _id, email, name, birthday, city, phone, avatarURL } = req.user;
+
+  res.json({ _id, email, name, birthday, city, phone, avatarURL });
+};
+
+const getUserPets = async (req, res) => {
+  const { _id: owner } = req.user;
+  const { page = 1, limit = 12 } = req.query;
+  const skip = (page - 1) * limit;
+  const result = await Pet.find({ owner }, '-createdAt -updatedAt', { skip, limit });
+  res.json(result);
+}
 
 const getCurrent = async (req, res) => {
   const{ email, name } = req.user;
@@ -68,6 +84,8 @@ const updateAvatar = async (req, res) => {
   };
   
   module.exports = {
+    getUserInfo: ctrlWrapper(getUserInfo),
+    getUserPets: ctrlWrapper(getUserPets),
     getCurrent: ctrlWrapper(getCurrent),
     updateAvatar: ctrlWrapper(updateAvatar),
     updateName: ctrlWrapper(updateName),

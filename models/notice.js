@@ -52,6 +52,7 @@ const noticeSchema = new Schema({
 
 noticeSchema.post("save", handleMongooseError);
 
+
 const addNoticeSchema = Joi.object({
 
   title: Joi.string().required().messages({
