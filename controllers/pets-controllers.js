@@ -13,16 +13,14 @@ const addPets = async (req, res) => {
   const avatarURL = path.join("avatars", avatarName);
 
   const { _id: owner } = req.user;
-  const mg = 3 * 1024;
+  
   if (!req.body) {
     throw HttpError.BadRequest(`The text fields are not filled in`);
   }
   if (!req.file) {
     throw HttpError.BadRequest(`The file is not loaded`);
   }
-  if (req.file.size > mg) {
-    throw HttpError.BadRequest(`Payload Too Large`);
-  }
+  
   const result = await Pet.create({
     ...req.body,
     avatarURL,

@@ -11,8 +11,8 @@ const { schemas } = require("../../models/notice");
 const router = express.Router();
 
 
-router.get('/search', ctrl.getNoticeByTitle);
-router.get('/categories/:category', ctrl.getNoticesByCategory);
+router.get('/all', ctrl.getAllNotices);
+router.get('/search', ctrl.getNoticesBySearchParams);
 router.get('/:noticeId', ctrl.getNoticeById);
 
 router.post('/favorites/:noticeId', authenticate, ctrl.addNoticeToFavorite);
