@@ -33,8 +33,6 @@ const register = async (req, res) => {
 
   res.cookie("refreshToken", tokens.refreshToken, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    domain: "localhost,yourpet-backend-jxa0.onrender.com,yourpet-nu.vercel.app",
-    path: "/",
     httpOnly: true,
   });
 
@@ -67,8 +65,6 @@ const login = async (req, res) => {
 
   res.cookie("refreshToken", tokens.refreshToken, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    domain: "localhost,yourpet-backend-jxa0.onrender.com,yourpet-nu.vercel.app",
-    path: "/",
     httpOnly: true,
   });
 
@@ -122,8 +118,6 @@ const refresh = async (req, res, next) => {
 
   res.cookie("refreshToken", tokens.refreshToken, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
-    domain: "localhost,yourpet-backend-jxa0.onrender.com,yourpet-nu.vercel.app",
-    path: "/",
     httpOnly: true,
   });
 
