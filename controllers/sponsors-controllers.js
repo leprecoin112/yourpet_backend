@@ -1,5 +1,5 @@
 const ctrlWrapper = require("../utils/ctrlWrapper");
-const { Sponsor } = require("../models/sponsors");
+const { Sponsor } = require("../models/sponsors");git
 const HttpError = require('../helpers/HttpError');
 
 const getAllSponsors = async (req, res) => {
