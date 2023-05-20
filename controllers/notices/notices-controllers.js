@@ -12,7 +12,7 @@ const ctrlWrapper = require("../../utils/ctrlWrapper");
 const photosDir = path.join(__dirname, "../", "public", "photos");
 
 const getAllNotices = async (req, res) => {
-  const { page = 1, limit = 12 } = req.query;
+  const { page = 1, limit = 3 } = req.query;
   const skip = (page - 1) * limit;
 
   const result = await Notice.find({}, "-createdAt -updatedAt", {
@@ -24,7 +24,7 @@ const getAllNotices = async (req, res) => {
     throw HttpError.NotFoundError("Notices not found");
   }
 
-  const totalResult = result.length;
+  const totalResult = await Notice.count();
   const totalPages = Math.ceil(totalResult / limit);
 
   res.status(200).json({
@@ -230,8 +230,6 @@ const removeUserNotice = async (req, res) => {
 module.exports = {
   getAllNotices: ctrlWrapper(getAllNotices),
   getNoticesBySearchParams: ctrlWrapper(getNoticesBySearchParams),
-  // getNoticeByTitle: ctrlWrapper(getNoticeByTitle),
-  // getNoticesByCategory: ctrlWrapper(getNoticesByCategory),
   getNoticeById: ctrlWrapper(getNoticeById),
   addNoticeToFavorite: ctrlWrapper(addNoticeToFavorite),
   getFavoriteUserNotices: ctrlWrapper(getFavoriteUserNotices),
