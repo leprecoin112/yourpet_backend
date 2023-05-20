@@ -33,6 +33,7 @@ const register = async (req, res) => {
 
   res.cookie("refreshToken", tokens.refreshToken, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
+    domain: "localhost",
     httpOnly: true,
   });
 
@@ -65,6 +66,7 @@ const login = async (req, res) => {
 
   res.cookie("refreshToken", tokens.refreshToken, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
+    domain: "localhost",
     httpOnly: true,
   });
 
@@ -118,6 +120,7 @@ const refresh = async (req, res, next) => {
 
   res.cookie("refreshToken", tokens.refreshToken, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
+    domain: "localhost",
     httpOnly: true,
   });
 
