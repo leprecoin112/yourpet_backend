@@ -21,9 +21,7 @@ app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
-    origin: "https://yourpet-nu.vercel.app",
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: "Content-Type,Authorization",
+    origin: ["https://yourpet-nu.vercel.app", "http://localhost:3000"],
   })
 );
 app.use(express.static("public"));
