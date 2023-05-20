@@ -7,7 +7,7 @@ const { User } = require("../../models/user");
 
 const { Pet } = require("../../models/pets");
 
-const avatarsDir = path.join(__dirname, "../", "public", "avatars");
+const avatarsDir = path.join(__dirname, "../../", "public", "avatars");
 
 const getUserInfo = async (req, res) => {
   const { _id, email, name, birthday, city, phone, avatarURL } = req.user;
