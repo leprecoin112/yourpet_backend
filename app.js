@@ -5,12 +5,12 @@ require("dotenv").config();
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 
-const authRouter = require("./routes/api/auth-routes");
-const newsRouter = require("./routes/api/news-routes");
-const sponsorsRouter = require("./routes/api/sponsors-routes");
-const noticeRouter = require("./routes/api/notices-routes");
-const userRouter = require("./routes/api/user-routes");
-const addPetsRouter = require("./routes/api/pets-routers");
+const authRouter = require("./routes/api/auth/auth-routes");
+const newsRouter = require("./routes/api/news/news-routes");
+const sponsorsRouter = require("./routes/api/sponsors/sponsors-routes");
+const noticeRouter = require("./routes/api/notices/notices-routes");
+const userRouter = require("./routes/api/user/user-routes");
+const addPetsRouter = require("./routes/api/pets/pets-routers");
 const app = express();
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
