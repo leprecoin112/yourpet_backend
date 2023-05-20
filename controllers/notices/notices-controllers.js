@@ -106,7 +106,7 @@ const getNoticesBySearchParams = async (req, res) => {
 const getNoticeById = async (req, res) => {
   const { noticeId } = req.params;
 
-  const notice = await Notice.findById(noticeId);
+  const notice = await Notice.findById(noticeId).populate("owner", "phone email name");
   if (!notice) {
     throw HttpError.NotFoundError("Notice not found");
   }
