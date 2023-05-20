@@ -4,6 +4,7 @@ const cors = require("cors");
 require("dotenv").config();
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
+const cookieParser = require("cookie-parser");
 
 const authRouter = require("./routes/api/auth/auth-routes");
 const newsRouter = require("./routes/api/news/news-routes");
@@ -16,6 +17,7 @@ const app = express();
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
 app.use(logger(formatsLogger));
+app.use(cookieParser());
 app.use(
   cors({
     credentials: true,
