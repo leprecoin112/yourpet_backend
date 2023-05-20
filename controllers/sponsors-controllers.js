@@ -1,10 +1,10 @@
 const ctrlWrapper = require("../utils/ctrlWrapper");
-const { News } = require("../models/news");
+const { Sponsor } = require("../models/sponsors");
 const HttpError = require('../helpers/HttpError');
 
 const getAllSponsors = async (req, res) => {
    
-    const result = await News.find();
+    const result = await Sponsor.find();
 
       if(result.length === 0) {
         throw HttpError.NotFoundError("Sponsors not found");
