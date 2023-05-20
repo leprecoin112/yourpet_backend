@@ -38,8 +38,8 @@ const register = async (req, res) => {
 
   res.status(201).json({
     user: {
-      name: user.name,
-      email: user.email,
+      name: result.name,
+      email: result.email,
     },
     ...tokens,
   });
