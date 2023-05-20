@@ -156,6 +156,34 @@
         }
       }
     },
+    "/auth/refresh": {
+      "get": {
+        "summary": "Refresh auth",
+        "tags": [
+          "Authorization"
+        ],
+        "description": "Refresh auth information of authorized user",
+        "operationId": "refresh",
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
     "/user": {
       "get": {
         "summary": "Get info about user",
@@ -1115,20 +1143,30 @@
       "LoginResponse": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "description": "user name",
-            "example": "Olena"
+          "user": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "user name",
+                "example": "Olena"
+              },
+              "email": {
+                "type": "string",
+                "description": "user email",
+                "example": "estasjuk@gmail.com"
+              }
+            }
           },
-          "email": {
-            "type": "string",
-            "description": "user email",
-            "example": "estasjuk@gmail.com"
-          },
-          "token": {
+          "accessToken": {
             "type": "string",
             "description": "Backend-generated unique identifier",
             "example": "GHR45GciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.jjF34QI6IjY0NWRlMTIzNTVlNWM4MDM0ODQ0Y2Q0MCIsImlhdCI6MTY4Mzg3NzgyNywiZXhwIjoxNjgzOTQyNjI3fQ.Cl7kfx9Tm-125ffgMKQGOzR9WhTH_dYET1B75hFjZyk"
+          },
+          "refreshToken": {
+            "type": "string",
+            "description": "Backend-generated unique identifier",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0NjBlZDFlMjAzOWY0YmY0ZmNiMGYzNSIsImlhdCI6MTY4NDYxNjAzMiwiZXhwIjoxNjg3MjA4MDMyfQ.TNCLb9OScTwrcLVg2txPk_K4_pESZ93SCjuUpDog4Kw"
           }
         }
       },
