@@ -29,22 +29,34 @@ const getAllNews = async (req, res) => {
 const findNewsByTitle = async (req, res) => {
   const { page = 1, limit = 6, title } = req.query;
   const skip = (page - 1) * limit;
-  const normalizedFind = title.toLowerCase().trim();
+  console.log(page);
+  const normalizedFind = title.trim().split(" ");
+  let searchQuery = {};
+  const regexExpressions = normalizedFind.map((word) => new RegExp(word, "i"));
 
-  const allNews = await News.find(
-    { title: { $regex: normalizedFind } },
-    "-createdAt -updatedAt",
-    {
-      skip,
-      limit: Number(limit),
-    }
-  ).sort({ createdAt: -1 });
+  if (title !== "null") {
+    searchQuery = {
+      $and: [
+        {
+          $or: regexExpressions.map((expression) => ({
+            title: { $regex: expression },
+          })),
+        },
+      ],
+    };
+  }
 
-  if (allNews.length === 0) {
+  const result = await News.find(searchQuery, "-createdAt -updatedAt", {
+    skip,
+    limit: Number(limit),
+  }).sort({ date: -1 });
+
+  if (result.length === 0) {
     throw HttpError.NotFoundError("News not found");
   }
 
-  const totalResults = allNews.length;
+  const totalResults = await News.count(searchQuery, "-createdAt -updatedAt");
+
   const totalPages = Math.ceil(totalResults / limit);
 
   res.status(200).json({
@@ -52,7 +64,7 @@ const findNewsByTitle = async (req, res) => {
     totalPages,
     page: +page,
     limit: +limit,
-    allNews,
+    news: result,
   });
 };
 
