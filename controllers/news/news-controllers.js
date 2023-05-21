@@ -31,20 +31,20 @@ const findNewsByTitle = async (req, res) => {
   const skip = (page - 1) * limit;
   const normalizedFind = title.toLowerCase().trim();
 
-  const allNews = await News.find({}, "-createdAt -updatedAt", {
-    skip,
-    limit: Number(limit),
-  }).sort({ createdAt: -1 });
+  const allNews = await News.find(
+    { title: { $regex: normalizedFind } },
+    "-createdAt -updatedAt",
+    {
+      skip,
+      limit: Number(limit),
+    }
+  ).sort({ createdAt: -1 });
 
-  const result = allNews.filter((oneNew) =>
-    oneNew.title.toLowerCase().includes(normalizedFind)
-  );
-
-  if (result.length === 0) {
+  if (allNews.length === 0) {
     throw HttpError.NotFoundError("News not found");
   }
 
-  const totalResults = result.length;
+  const totalResults = allNews.length;
   const totalPages = Math.ceil(totalResults / limit);
 
   res.status(200).json({
@@ -52,7 +52,7 @@ const findNewsByTitle = async (req, res) => {
     totalPages,
     page: +page,
     limit: +limit,
-    result,
+    allNews,
   });
 };
 
