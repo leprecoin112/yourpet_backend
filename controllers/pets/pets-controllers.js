@@ -4,7 +4,7 @@ const path = require("path");
 const { Pet } = require("../../models/pets");
 const { ctrlWrapper } = require("../../utils");
 const { HttpError } = require("../../helpers");
-const avatarDir = path.join(__dirname, "../", "public", "avatarsPets");
+const avatarDir = path.join(__dirname, "../../", "public", "avatarsPets");
 const addPets = async (req, res) => {
   const { path: tempUpload, filename } = req.file;
   const avatarName = `_${filename}`;

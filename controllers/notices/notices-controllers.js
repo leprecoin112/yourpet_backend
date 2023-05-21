@@ -9,7 +9,7 @@ const HttpError = require("../../helpers/HttpError");
 
 const ctrlWrapper = require("../../utils/ctrlWrapper");
 
-const photosDir = path.join(__dirname, "../", "public", "photos");
+const photosDir = path.join(__dirname, "../../", "public", "photos");
 
 const getAllNotices = async (req, res) => {
   const { page = 1, limit = 3 } = req.query;
