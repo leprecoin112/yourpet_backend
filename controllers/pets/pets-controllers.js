@@ -1,16 +1,9 @@
-// const jwt = require("jsonwebtoken");
-const fs = require("fs/promises");
-const path = require("path");
+const { nanoid } = require("nanoid");
 const { Pet } = require("../../models/pets");
 const { ctrlWrapper } = require("../../utils");
-const { HttpError } = require("../../helpers");
-const avatarDir = path.join(__dirname, "../../", "public", "avatarsPets");
+const { HttpError, cloudinaryUpload } = require("../../helpers");
 const addPets = async (req, res) => {
   const { path: tempUpload, filename } = req.file;
-  const avatarName = `_${filename}`;
-  const resultUpload = path.join(avatarDir, avatarName);
-  await fs.rename(tempUpload, resultUpload);
-  const avatarURL = path.join("avatars", avatarName);
 
   const { _id: owner } = req.user;
 
@@ -20,6 +13,10 @@ const addPets = async (req, res) => {
   if (!req.file) {
     throw HttpError.BadRequest(`The file is not loaded`);
   }
+
+  const uniqueId = nanoid();
+  const avatarName = `${uniqueId}_${filename}`;
+  const avatarURL = await cloudinaryUpload(tempUpload, avatarName);
 
   const result = await Pet.create({
     ...req.body,

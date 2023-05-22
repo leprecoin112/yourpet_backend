@@ -1,15 +1,12 @@
-const fs = require("fs/promises");
-const path = require("path");
+
 const { nanoid } = require("nanoid");
 
 const { Notice } = require("../../models/notice");
 const { User } = require("../../models/user");
 
-const HttpError = require("../../helpers/HttpError");
+const {HttpError, cloudinaryUpload} = require("../../helpers");
 
 const ctrlWrapper = require("../../utils/ctrlWrapper");
-
-const photosDir = path.join(__dirname, "../../", "public", "photos");
 
 const getAllNotices = async (req, res) => {
   const { page = 1, limit = 3 } = req.query;
@@ -172,9 +169,7 @@ const addNoticeByCategory = async (req, res) => {
   const uniqueId = nanoid();
 
   const photoName = `${uniqueId}_${filename}`;
-  const resultUpload = path.join(photosDir, photoName);
-  await fs.rename(tempUpload, resultUpload);
-  const photo = path.join("photos", photoName);
+  const photo = await cloudinaryUpload(tempUpload, photoName);
 
   const result = await Notice.create({ ...req.body, category, owner, photo });
 
