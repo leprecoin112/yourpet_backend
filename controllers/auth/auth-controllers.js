@@ -7,6 +7,12 @@ const { User } = require("../../models/user");
 
 const { HttpError, tokenActions } = require("../../helpers");
 
+const cookieOption = {
+  maxAge: 30 * 24 * 60 * 60 * 1000,
+  httpOnly: true,
+  sameSite: "lax",
+};
+
 const register = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
@@ -31,10 +37,7 @@ const register = async (req, res) => {
 
   await User.findByIdAndUpdate(result._id, { token: tokens.accessToken });
 
-  res.cookie("refreshToken", tokens.refreshToken, {
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    httpOnly: true,
-  });
+  res.cookie("refreshToken", tokens.refreshToken, cookieOption);
 
   res.status(201).json({
     user: {
@@ -63,11 +66,7 @@ const login = async (req, res) => {
 
   await User.findByIdAndUpdate(user._id, { token: tokens.accessToken });
 
-  res.cookie("refreshToken", tokens.refreshToken, {
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    httpOnly: true,
-    domain: ".onrender.com",
-  });
+  res.cookie("refreshToken", tokens.refreshToken, cookieOption);
 
   res.json({
     user: {
@@ -117,10 +116,7 @@ const refresh = async (req, res, next) => {
 
   await User.findByIdAndUpdate(user._id, { token: tokens.accessToken });
 
-  res.cookie("refreshToken", tokens.refreshToken, {
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    httpOnly: true,
-  });
+  res.cookie("refreshToken", tokens.refreshToken, cookieOption);
 
   res.status(200).json({
     user: {
