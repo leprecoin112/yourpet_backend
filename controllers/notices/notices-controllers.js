@@ -103,18 +103,6 @@ const getNoticesBySearchParams = async (req, res) => {
   });
 };
 
-const getNoticeById = async (req, res) => {
-  const { noticeId } = req.params;
-
-  const notice = await Notice.findById(noticeId).populate("owner", "phone email name");
-  if (!notice) {
-    throw HttpError.NotFoundError("Notice not found");
-  }
-  res.status(201).json({
-    data: notice,
-  });
-};
-
 const addNoticeToFavorite = async (req, res) => {
   const { _id: userId } = req.user;
   const { noticeId } = req.params;
@@ -227,10 +215,25 @@ const removeUserNotice = async (req, res) => {
   });
 };
 
+const getNoticeId = async (req, res) => {
+  const { noticeId } = req.params;
+
+  const notice = await Notice.findById(noticeId).populate(
+    "owner",
+    "phone email name"
+  );
+  if (!notice) {
+    throw HttpError.NotFoundError("Notice not found");
+  }
+  res.status(201).json({
+    data: notice,
+  });
+};
+
 module.exports = {
   getAllNotices: ctrlWrapper(getAllNotices),
   getNoticesBySearchParams: ctrlWrapper(getNoticesBySearchParams),
-  getNoticeById: ctrlWrapper(getNoticeById),
+  getNoticeId: ctrlWrapper(getNoticeId),
   addNoticeToFavorite: ctrlWrapper(addNoticeToFavorite),
   getFavoriteUserNotices: ctrlWrapper(getFavoriteUserNotices),
   removeNoticeFromFavorite: ctrlWrapper(removeNoticeFromFavorite),

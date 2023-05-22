@@ -12,7 +12,6 @@ const router = express.Router();
 
 router.get("/all", ctrl.getAllNotices);
 router.get("/search", ctrl.getNoticesBySearchParams);
-router.get("/:noticeId", ctrl.getNoticeById);
 
 router.post("/favorites/:noticeId", authenticate, ctrl.addNoticeToFavorite);
 router.get("/favorites", authenticate, ctrl.getFavoriteUserNotices);
@@ -31,5 +30,6 @@ router.post(
 );
 router.get("/", authenticate, ctrl.getAllUserNotices);
 router.delete("/:noticeId", authenticate, ctrl.removeUserNotice);
+router.get("/:noticeId", ctrl.getNoticeId);
 
 module.exports = router;
