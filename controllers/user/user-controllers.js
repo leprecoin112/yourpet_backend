@@ -1,13 +1,7 @@
-const fs = require("fs/promises");
-const path = require("path");
-
 const { ctrlWrapper } = require("../../utils");
-
 const { User } = require("../../models/user");
-
 const { Pet } = require("../../models/pets");
-
-const avatarsDir = path.join(__dirname, "../../", "public", "avatars");
+const { cloudinaryUpload } = require("../../helpers");
 
 const getUserInfo = async (req, res) => {
   const { _id, email, name, birthday, city, phone, avatarURL } = req.user;
@@ -38,10 +32,9 @@ const getCurrent = async (req, res) => {
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: tempUpload, filename } = req.file;
+
   const avatarName = `${_id}_${filename}`;
-  const resultUpload = path.join(avatarsDir, avatarName);
-  await fs.rename(tempUpload, resultUpload);
-  const avatarURL = path.join("avatars", avatarName);
+  const avatarURL = await cloudinaryUpload(tempUpload, avatarName);
   await User.findByIdAndUpdate(_id, { avatarURL });
 
   res.json({ avatarURL });
