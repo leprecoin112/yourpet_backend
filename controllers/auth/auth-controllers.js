@@ -66,6 +66,7 @@ const login = async (req, res) => {
   res.cookie("refreshToken", tokens.refreshToken, {
     maxAge: 30 * 24 * 60 * 60 * 1000,
     httpOnly: true,
+    domain: ".onrender.com",
   });
 
   res.json({
