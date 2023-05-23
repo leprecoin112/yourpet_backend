@@ -5,12 +5,6 @@ const { upload, authenticate, validationId } = require("../../../middlewares");
 const { validateBody } = require("../../../utils");
 
 const { petAddJoiSchema } = require("../../../models/pets");
-router.post(
-  "/",
-  authenticate,
-  validateBody(petAddJoiSchema),
-  upload.single("avatar"),
-  ctrl.addPets
-);
+router.post("/", authenticate, upload.single("avatar"), ctrl.addPets);
 router.delete("/:id", validationId, authenticate, ctrl.deletePet);
 module.exports = router;
