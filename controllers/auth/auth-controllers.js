@@ -1,5 +1,4 @@
 const bcrypt = require("bcrypt");
-const path = require("path");
 
 const { ctrlWrapper } = require("../../utils");
 
@@ -22,7 +21,8 @@ const register = async (req, res) => {
   }
 
   const hashPassword = await bcrypt.hash(password, 10);
-  const avatarURL = path.join("avatars", "Photodefault.png");
+  const avatarURL =
+    "https://res.cloudinary.com/dmgat59bh/image/upload/v1684859631/Photodefault_xpk3rp.png";
 
   const result = await User.create({
     ...req.body,
