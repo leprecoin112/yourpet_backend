@@ -1,10 +1,9 @@
-
 const { nanoid } = require("nanoid");
 
 const { Notice } = require("../../models/notice");
 const { User } = require("../../models/user");
 
-const {HttpError, cloudinaryUpload} = require("../../helpers");
+const { HttpError, cloudinaryUpload } = require("../../helpers");
 
 const ctrlWrapper = require("../../utils/ctrlWrapper");
 

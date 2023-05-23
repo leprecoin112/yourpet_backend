@@ -8,8 +8,8 @@ const { petAddJoiSchema } = require("../../../models/pets");
 router.post(
   "/",
   authenticate,
-  upload.single("avatar"),
   validateBody(petAddJoiSchema),
+  upload.single("avatar"),
   ctrl.addPets
 );
 router.delete("/:id", validationId, authenticate, ctrl.deletePet);

@@ -25,7 +25,6 @@ router.post(
   "/:category",
   authenticate,
   upload.single("photo"),
-  validateBody(schemas.addNoticeSchema),
   ctrl.addNoticeByCategory
 );
 router.get("/", authenticate, ctrl.getAllUserNotices);
