@@ -11,10 +11,10 @@ const getAllNotices = async (req, res) => {
   const { page = 1, limit = 3 } = req.query;
   const skip = (page - 1) * limit;
 
-  const result = await Notice.find({}, "-createdAt -updatedAt", {
+  const result = await Notice.find({}, "", {
     skip,
     limit: Number(limit),
-  });
+  }).sort({ createdAt: -1 });
 
   if (result.length === 0) {
     throw HttpError.NotFoundError("Notices not found");
@@ -39,10 +39,10 @@ const getNoticesBySearchParams = async (req, res) => {
   let result = [];
 
   if (!title && !category) {
-    result = await Notice.find({}, "-createdAt -updatedAt", {
+    result = await Notice.find({}, "", {
       skip,
       limit: Number(limit),
-    });
+    }).sort({ createdAt: -1 });
 
     if (result.length === 0) {
       throw HttpError.NotFoundError("Notices not found");
@@ -50,10 +50,10 @@ const getNoticesBySearchParams = async (req, res) => {
   }
 
   if (!title && category) {
-    result = await Notice.find({ category }, "-createdAt -updatedAt", {
+    result = await Notice.find({ category }, "", {
       skip,
       limit: Number(limit),
-    });
+    }).sort({ createdAt: -1 });
 
     if (result.length === 0) {
       throw HttpError.NotFoundError("Notices not found");
@@ -62,10 +62,10 @@ const getNoticesBySearchParams = async (req, res) => {
 
   if (title && !category) {
     const normalizedFind = title.toLowerCase().trim();
-    const notices = await Notice.find({}, "-createdAt -updatedAt", {
+    const notices = await Notice.find({}, "", {
       skip,
       limit: Number(limit),
-    });
+    }).sort({ createdAt: -1 });
 
     result = notices.filter((notice) =>
       notice.title.toLowerCase().includes(normalizedFind)
@@ -78,10 +78,10 @@ const getNoticesBySearchParams = async (req, res) => {
 
   if (category && title) {
     const normalizedFind = title.toLowerCase().trim();
-    const notices = await Notice.find({ category }, "-createdAt -updatedAt", {
+    const notices = await Notice.find({ category }, "", {
       skip,
       limit: Number(limit),
-    });
+    }).sort({ createdAt: -1 });
     result = notices.filter((notice) =>
       notice.title.toLowerCase().includes(normalizedFind)
     );
@@ -124,7 +124,7 @@ const addNoticeToFavorite = async (req, res) => {
 const getFavoriteUserNotices = async (req, res) => {
   const { _id: userId } = req.user;
 
-  const user = await User.findById(userId).populate("favorite");
+  const user = await User.findById(userId).populate("favorite").sort({ createdAt: -1 });
 
   const result = user.favorite;
 
@@ -181,10 +181,10 @@ const getAllUserNotices = async (req, res) => {
   const { _id: owner } = req.user;
   const { page = 1, limit = 12 } = req.query;
   const skip = (page - 1) * limit;
-  const notices = await Notice.find({ owner }, "-createdAt -updatedAt", {
+  const notices = await Notice.find({ owner }, "", {
     skip,
     limit,
-  }).populate("owner", "email");
+  }).populate("owner", "email").sort({ createdAt: -1 });
 
   if (notices.length === 0) {
     throw HttpError.NotFoundError(`There any notices for this user`);
